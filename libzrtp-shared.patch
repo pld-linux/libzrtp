@@ -1,0 +1,97 @@
+--- libzrtp-master/Makefile.am.orig	2012-07-07 20:59:23.000000000 +0200
++++ libzrtp-master/Makefile.am	2013-01-31 18:10:08.706028631 +0100
+@@ -32,8 +32,6 @@ libzrtp_include_HEADERS = \
+ 					$(top_srcdir)/include/zrtp_types.h \
+ 					$(top_srcdir)/include/zrtp_version.h \
+ 					\
+-					$(top_srcdir)/third_party/bnlib/bn.h \
+-					\
+ 					$(top_srcdir)/third_party/bgaes/aes.h \
+ 					$(top_srcdir)/third_party/bgaes/aesopt.h \
+ 					$(top_srcdir)/third_party/bgaes/aestab.h \
+@@ -53,18 +51,17 @@ libzrtp_include_HEADERS += $(top_srcdir)
+ 						   $(top_srcdir)/include/zrtp_b64_encode.h
+ endif
+ 
+-lib_LIBRARIES = libzrtp.a
++lib_LTLIBRARIES = libzrtp.la
+ 
+-libzrtp_a_CPPFLAGS = \
++libzrtp_la_CPPFLAGS = \
+ 			-I$(top_srcdir)/include \
+ 			-I$(top_srcdir)/. \
+-			-I$(top_srcdir)/third_party/bgaes \
+-			-I$(top_srcdir)/third_party/bnlib
++			-I$(top_srcdir)/third_party/bgaes
+ 
+ 
+-libzrtp_a_LIBADD = $(top_srcdir)/third_party/bnlib/libbn.a
++libzrtp_la_LIBADD = -lbn
+ 
+-libzrtp_a_SOURCES = $(top_srcdir)/src/zrtp.c \
++libzrtp_la_SOURCES = $(top_srcdir)/src/zrtp.c \
+ 					$(top_srcdir)/src/zrtp_cache.c \
+ 					$(top_srcdir)/src/zrtp_cache_file.c \
+ 					$(top_srcdir)/src/zrtp_crc.c \
+@@ -100,12 +97,12 @@ libzrtp_a_SOURCES = $(top_srcdir)/src/zr
+ 					\
+ 					$(top_srcdir)/src/zrtp_engine_driven.c
+ if ZRTP_BUILD_ENTERPRISE
+-libzrtp_a_SOURCES +=$(top_srcdir)/src/zrtp_crypto_ec.c \
++libzrtp_la_SOURCES +=$(top_srcdir)/src/zrtp_crypto_ec.c \
+ 					$(top_srcdir)/src/zrtp_crypto_ecdh.c
+ endif
+ 
+ if ZRTP_WITH_SQLITE
+-libzrtp_a_SOURCES +=$(top_srcdir)/src/zrtp_cache_db.c \
++libzrtp_la_SOURCES +=$(top_srcdir)/src/zrtp_cache_db.c \
+ 					$(top_srcdir)/src/zrtp_cache_sqlite_backend.c \
+ 					$(top_srcdir)/src/zrtp_b64_decode.c \
+ 					$(top_srcdir)/src/zrtp_b64_encode.c
+@@ -117,14 +114,11 @@ cache_test_CPPFLAGS = 	-I$(top_srcdir)/i
+ 			-I$(top_srcdir)/. \
+ 			-I$(top_srcdir)/test \
+ 			-I$(top_srcdir)/test/cmockery \
+-			-I$(top_srcdir)/third_party/bgaes \
+-			-I$(top_srcdir)/third_party/bnlib
++			-I$(top_srcdir)/third_party/bgaes
+ 
+ cache_test_SOURCES = $(top_srcdir)/test/cmockery/cmockery.c \
+ 					 $(top_srcdir)/test/cache_test.c
+-cache_test_LDADD   = libzrtp.a  $(top_srcdir)/third_party/bnlib/libbn.a -lpthread
+-
+-SUBDIRS =  third_party/bnlib
++cache_test_LDADD   = libzrtp.la -lbn -lpthread
+ 
+ if HAVE_DOXYGEN
+ doc: .stamp-doc
+@@ -135,5 +129,4 @@ endif
+ 
+ uninstall:
+ 	rm -rf $(prefix)/include/libzrtp
+-	rm -f $(prefix)/lib/libzrtp.a
+ 
+--- libzrtp-master/configure.in.orig	2012-07-07 20:59:23.000000000 +0200
++++ libzrtp-master/configure.in	2013-01-31 18:24:47.736010304 +0100
+@@ -35,19 +35,12 @@ esac
+ AM_INIT_AUTOMAKE
+ AX_PREFIX_CONFIG_H(include/zrtp_config_unix.h,ZRTP,config/config.h)
+ 
+-CFLAGS="$CFLAGS -std=c99 -O2 -g3 -Wall -Wextra -Wno-unused-parameter -fno-strict-aliasing -fPIC -DZRTP_AUTOMAKE=1"
+-
+-# Configuring external libraries
+-echo "========================= configuring bnlib =============================="
+-cd third_party/bnlib
+-./configure CFLAGS="$CFLAGS"
+-cd ../..
+-echo "================================ done  ==================================="
++CFLAGS="$CFLAGS -std=c99 -Wall -Wextra -Wno-unused-parameter -fno-strict-aliasing -DZRTP_AUTOMAKE=1"
+ 
+ # Checks for programs.
+ AC_PROG_CC
+ AC_PROG_CXX
+-AC_PROG_RANLIB
++AC_PROG_LIBTOOL
+ 
+ # Apply configure options
+ AC_ARG_ENABLE(enterprise, [--enable-enterprise enable building of enterprise components).], enable_enterprise=$enableval,enable_enterprise="no")
