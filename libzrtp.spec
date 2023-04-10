@@ -15,7 +15,7 @@ Group:		Libraries
 Source0:	https://github.com/traviscross/libzrtp/archive/master.tar.gz
 # Source0-md5:	58bddacc5a35f3271c7c7095e8b35d49
 Patch0:		%{name}-shared.patch
-URL:		http://zfone.com/prod_sdk.html
+URL:		http://zfoneproject.com/prod_sdk.html
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	bnlib-devel
