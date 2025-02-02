@@ -3,13 +3,15 @@
 %bcond_without	apidocs		# do not build and package API docs
 %bcond_without	sqlite3		# SQLite based cache
 %bcond_without	tests		# do not perform "make check"
-#
+
+%define	snap	20120707
+%define	rel	1
+
 Summary:	Phil Zimmermann's SDK for ZRTP
 Summary(pl.UTF-8):	SDK ZRTP Phila Zimmermanna
 Name:		libzrtp
 Version:	1.2.0
-%define	snap	20120707
-Release:	0.%{snap}.1
+Release:	0.%{snap}.%{rel}
 License:	AGPL v3 with FreeSWITCH exception or commercial
 Group:		Libraries
 Source0:	https://github.com/traviscross/libzrtp/archive/master.tar.gz
