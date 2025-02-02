@@ -5,7 +5,7 @@
 %bcond_without	tests		# do not perform "make check"
 
 %define	snap	20120707
-%define	rel	1
+%define	rel	2
 
 Summary:	Phil Zimmermann's SDK for ZRTP
 Summary(pl.UTF-8):	SDK ZRTP Phila Zimmermanna
