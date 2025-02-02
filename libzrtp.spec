@@ -15,6 +15,7 @@ Group:		Libraries
 Source0:	https://github.com/traviscross/libzrtp/archive/master.tar.gz
 # Source0-md5:	58bddacc5a35f3271c7c7095e8b35d49
 Patch0:		%{name}-shared.patch
+Patch1:		features.patch
 URL:		http://zfoneproject.com/prod_sdk.html
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -69,7 +70,8 @@ Dokumentacja API biblioteki ZRTP.
 
 %prep
 %setup -q -n %{name}-master
-%patch0 -p1
+%patch -P0 -p1
+%patch -P1 -p1
 
 head -n78 src/zrtp_legal.c >LEGAL
 
